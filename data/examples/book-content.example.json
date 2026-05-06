@@ -1,0 +1,56 @@
+{
+  "exercises": [
+    {
+      "title": "Reviewed pelvis assessment from book",
+      "slug": "reviewed-pelvis-assessment-from-book",
+      "originalNumber": "Прием № 1",
+      "category": "Диагностика",
+      "difficulty": "basic",
+      "bodyZones": ["таз", "поясница"],
+      "goals": ["оценить положение таза", "подготовить план работы"],
+      "clientPosition": "Лежа на спине",
+      "practitionerPosition": "У стоп клиента",
+      "steps": [
+        "Проверить положение стоп и визуальную симметрию ног.",
+        "Сопоставить наблюдение с положением таза и общим тонусом.",
+        "Зафиксировать выводы перед выбором техники."
+      ],
+      "keyPoints": [
+        "Не делать вывод по одному признаку.",
+        "Сохранять спокойный контакт и наблюдать общую картину."
+      ],
+      "commonMistakes": [
+        "Считать визуальную разницу длины ног единственным доказательством смещения."
+      ],
+      "contraindications": [
+        "Предупреждение! Не выполнять проверку через острую боль.",
+        "Внимание! Не форсировать положение конечностей за физиологический предел."
+      ],
+      "expectedEffect": "Появляется исходная точка для выбора дальнейшей работы.",
+      "clientFeeling": "Клиент ощущает только мягкую диагностическую позицию.",
+      "sourceReference": "Book, p. 12, Прием № 1"
+    }
+  ],
+  "theoryCards": [
+    {
+      "topic": "Основы метода",
+      "title": "Таз как основа баланса",
+      "question": "Почему положение таза важно оценивать перед локальной работой?",
+      "answer": "Положение таза влияет на центр тяжести и может создавать компенсации в позвоночнике, плечах и ногах.",
+      "practicalMeaning": "Перед выбором локальной техники сначала проверь общий баланс тела.",
+      "tags": ["таз", "баланс", "центр тяжести"],
+      "difficulty": 1,
+      "sourceReference": "Book, p. 5"
+    }
+  ],
+  "practiceSequences": [
+    {
+      "slug": "reviewed-book-initial-check",
+      "title": "Reviewed book initial check",
+      "description": "A short reviewed flow for beginning a session.",
+      "useCase": "Initial diagnostic orientation",
+      "exerciseIds": [],
+      "notes": "After importing real content, fill exerciseIds with reviewed exercise IDs if a stable sequence is needed."
+    }
+  ]
+}

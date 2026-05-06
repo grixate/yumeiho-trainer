@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-yumeiho}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-yumeiho}
+      POSTGRES_DB: ${POSTGRES_DB:-yumeiho}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-yumeiho} -d ${POSTGRES_DB:-yumeiho}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://yumeiho:yumeiho@postgres:5432/yumeiho?schema=public
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres-data:

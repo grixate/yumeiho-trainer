@@ -1,0 +1,97 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum CardType {
+  exercise
+  theory
+}
+
+enum ReviewRating {
+  again
+  hard
+  good
+  easy
+}
+
+model Exercise {
+  id                   String   @id @default(cuid())
+  slug                 String   @unique
+  title                String
+  originalNumber       String?
+  category             String
+  difficulty           String   @default("basic")
+  bodyZones            String[]
+  goals                String[]
+  clientPosition       String?
+  practitionerPosition String?
+  steps                Json
+  keyPoints            Json
+  commonMistakes       Json
+  contraindications    Json
+  expectedEffect       String?
+  clientFeeling        String?
+  theoryLinks          Json?
+  sourceReference      String?
+  personalNotes        String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+model TheoryCard {
+  id               String   @id @default(cuid())
+  topic            String
+  title            String
+  question         String
+  answer           String
+  practicalMeaning String?
+  tags             String[]
+  difficulty       Int      @default(1)
+  sourceReference  String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model PracticeSequence {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String?
+  useCase     String
+  exerciseIds String[]
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ReviewResult {
+  id         String       @id @default(cuid())
+  cardType   CardType
+  cardId     String
+  mode       String
+  rating     ReviewRating
+  notes      String?
+  reviewedAt DateTime     @default(now())
+}
+
+model PracticeLog {
+  id               String   @id @default(cuid())
+  title            String
+  clientContext    String?
+  sessionNotes     String
+  exerciseIds      String[]
+  whatWorked       String?
+  whatWasDifficult String?
+  followUpIdeas    String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
