@@ -5,14 +5,16 @@ import { Input } from "@/components/ui/input";
 export function SearchForm({
   placeholder,
   defaultValue,
+  action,
   className,
 }: {
   placeholder: string;
   defaultValue?: string;
+  action?: string;
   className?: string;
 }) {
   return (
-    <form className={className}>
+    <form action={action} className={className}>
       <div className="flex gap-2">
         <div className="relative flex-1">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />

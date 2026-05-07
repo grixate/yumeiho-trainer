@@ -6,7 +6,7 @@ import { practicalActions, practicalGoals, practicalWarnings } from "@/lib/pract
 import { asStringArray } from "@/lib/utils";
 import { LearningShell } from "@/components/learning-layout";
 import {
-  SequenceDetailClient,
+  FocusModeExercise,
   type PracticeExerciseView,
   type PracticeSequenceBlockView,
 } from "@/components/sequence-practice";
@@ -15,7 +15,7 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export default async function SequenceDetailPage({ params }: PageProps) {
+export default async function SequenceFocusPage({ params }: PageProps) {
   const { slug } = await params;
   const sequence = await prisma.practiceSequence.findUnique({ where: { slug } });
   if (!sequence) notFound();
@@ -32,7 +32,7 @@ export default async function SequenceDetailPage({ params }: PageProps) {
 
   return (
     <LearningShell width="narrow">
-      <SequenceDetailClient
+      <FocusModeExercise
         sequence={{
           slug: sequence.slug,
           title: sequence.title,

@@ -1,12 +1,9 @@
-import Link from "next/link";
-import { Plus } from "lucide-react";
-import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/empty-state";
-import { ExerciseCard } from "@/components/exercise-card";
 import { EditorialHeader, LearningShell } from "@/components/learning-layout";
 import { LearningSearch } from "@/components/learning-search";
+import { ExerciseResultCard } from "@/components/practical-ui";
+import { exerciseOrderNumber, filterExercises, getExerciseFilterOptions } from "@/lib/practical-content";
 
 type PageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
@@ -18,70 +15,51 @@ function param(value: string | string[] | undefined) {
 
 export default async function ExercisesPage({ searchParams }: PageProps) {
   const params = await searchParams;
-  const q = param(params?.q)?.trim() ?? "";
-  const category = param(params?.category);
-  const bodyZone = param(params?.bodyZone);
-  const goal = param(params?.goal);
-
-  const where: Prisma.ExerciseWhereInput = {
-    AND: [
-      q
-        ? {
-            OR: [
-              { title: { contains: q, mode: "insensitive" } },
-              { category: { contains: q, mode: "insensitive" } },
-              { expectedEffect: { contains: q, mode: "insensitive" } },
-              { bodyZones: { has: q } },
-              { goals: { has: q } },
-            ],
-          }
-        : {},
-      category ? { category } : {},
-      bodyZone ? { bodyZones: { has: bodyZone } } : {},
-      goal ? { goals: { has: goal } } : {},
-    ],
+  const filters = {
+    q: param(params?.q)?.trim() ?? "",
+    category: param(params?.category),
+    bodyZone: param(params?.bodyZone),
+    difficulty: param(params?.difficulty),
+    sequenceRole: param(params?.sequenceRole),
   };
 
-  const [exercises, allExercises] = await Promise.all([
-    prisma.exercise.findMany({ where, orderBy: { title: "asc" } }),
-    prisma.exercise.findMany({ orderBy: { title: "asc" } }),
-  ]);
-
-  const categories = [...new Set(allExercises.map((item) => item.category))];
-  const bodyZones = [...new Set(allExercises.flatMap((item) => item.bodyZones))];
-  const goals = [...new Set(allExercises.flatMap((item) => item.goals))];
+  const allExercises = (await prisma.exercise.findMany()).sort(
+    (a, b) => exerciseOrderNumber(a) - exerciseOrderNumber(b) || a.title.localeCompare(b.title, "ru"),
+  );
+  const exercises = filterExercises(allExercises, filters);
+  const options = getExerciseFilterOptions(allExercises);
 
   return (
-    <LearningShell>
+    <LearningShell width="narrow" className="space-y-5">
       <EditorialHeader
-        eyebrow="Память приемов"
+        eyebrow="Быстрый поиск"
         title="Приемы"
-        description="Практические карточки для повторения перед сеансом, тренировки вспоминания и быстрого поиска."
-        action={
-          <Button asChild variant="outline" className="rounded-full">
-            <Link href="/admin/exercises/new">
-              <Plus className="h-4 w-4" />
-              Новый прием
-            </Link>
-          </Button>
-        }
+        description="Откройте нужную карточку за несколько секунд: цель, положение, шаги и осторожность без лишнего слоя."
       >
         <LearningSearch
-          placeholder="Искать приемы, зоны, цели..."
-          defaultValue={q}
+          placeholder="Номер, название, зона или действие..."
+          defaultValue={filters.q}
           filters={[
-            { name: "category", label: "Категория", options: categories },
-            { name: "bodyZone", label: "Зона тела", options: bodyZones },
-            { name: "goal", label: "Цель", options: goals },
+            { name: "bodyZone", label: "Зона тела", options: options.bodyZones },
+            { name: "category", label: "Категория", options: options.categories },
+            { name: "difficulty", label: "Сложность", options: options.difficulties },
+            { name: "sequenceRole", label: "Роль в потоке", options: options.sequenceRoles },
           ]}
         />
       </EditorialHeader>
+
+      <div className="text-sm text-stone-500">
+        {exercises.length} из {allExercises.length} приемов
+      </div>
+
       {exercises.length ? (
-        <div className="space-y-4">
-          {exercises.map((exercise) => <ExerciseCard key={exercise.id} exercise={exercise} />)}
+        <div className="space-y-3">
+          {exercises.map((exercise) => (
+            <ExerciseResultCard key={exercise.id} exercise={exercise} />
+          ))}
         </div>
       ) : (
-        <EmptyState title="Приемы не найдены">Попробуйте другой поиск или добавьте первый прием.</EmptyState>
+        <EmptyState title="Приемы не найдены">Снимите фильтр или попробуйте другое слово из карточки.</EmptyState>
       )}
     </LearningShell>
   );

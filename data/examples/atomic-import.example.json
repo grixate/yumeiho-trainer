@@ -1,0 +1,51 @@
+{
+  "items": [
+    {
+      "type": "exercise",
+      "data": {
+        "slug": "testovaya-prakticheskaya-kartochka",
+        "title": "Тестовая практическая карточка",
+        "originalNumber": "99",
+        "category": "Проверка импорта",
+        "difficulty": "basic",
+        "sequenceRole": "prepare",
+        "bodyZones": ["таз"],
+        "goals": ["проверить атомарный импорт"],
+        "clientPosition": "Лежа на спине",
+        "practitionerPosition": "У стоп пациента",
+        "steps": ["Сохранить спокойную позицию.", "Проверить читаемость карточки."],
+        "keyPoints": ["Данные должны пройти валидацию."],
+        "commonMistakes": ["Не смешивать форму импорта с UI."],
+        "contraindications": ["Не использовать тестовую карточку как медицинскую инструкцию."],
+        "preview": {
+          "goal": ["проверить атомарный импорт"],
+          "keyActions": ["сохранить позицию", "проверить карточку"],
+          "warnings": ["тестовая запись"]
+        },
+        "expectedEffect": "Импорт принимает формат items.",
+        "clientFeeling": "Не применимо.",
+        "sourceReference": "Тестовый пример"
+      }
+    },
+    {
+      "type": "practiceSequence",
+      "data": {
+        "slug": "testovaya-posledovatelnost",
+        "title": "Тестовая последовательность",
+        "description": "Проверяет атомарный формат последовательности.",
+        "useCase": "Проверка импорта",
+        "exerciseIds": ["testovaya-prakticheskaya-kartochka"],
+        "blocks": [
+          {
+            "title": "Проверочный блок",
+            "description": "Один прием для проверки.",
+            "exerciseIds": ["testovaya-prakticheskaya-kartochka"]
+          }
+        ]
+      }
+    }
+  ],
+  "manifest": {
+    "name": "Atomic import compatibility example"
+  }
+}

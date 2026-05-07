@@ -3,7 +3,6 @@
 import { FormEvent, useMemo, useState } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -64,22 +63,30 @@ export function LearningSearch({
     push(next);
   }
 
+  function clearQuery() {
+    setQuery("");
+    const next = new URLSearchParams(params);
+    next.delete("q");
+    push(next);
+  }
+
   return (
     <div className="space-y-3">
-      <form onSubmit={submit} className="flex gap-2">
+      <form onSubmit={submit} className="grid gap-2 sm:flex">
         <Input
           name="q"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder={placeholder}
-          className="h-12 rounded-xl border-stone-200 bg-white/90 px-4 text-base shadow-sm"
+          className="h-14 rounded-2xl border-stone-200 bg-white/95 px-4 text-base shadow-sm"
         />
-        <Button type="submit" variant="outline" className="h-12 rounded-xl px-4">
+        <div className="grid grid-cols-[1fr_auto] gap-2 sm:flex">
+        <Button type="submit" variant="outline" className="h-12 rounded-xl px-4 sm:h-14">
           Искать
         </Button>
         <Sheet>
           <SheetTrigger asChild>
-            <Button type="button" variant="secondary" className="h-12 rounded-xl px-4">
+            <Button type="button" variant="secondary" className="h-12 rounded-xl px-4 sm:h-14">
               <SlidersHorizontal className="h-4 w-4" />
               Фильтр
             </Button>
@@ -126,13 +133,19 @@ export function LearningSearch({
             </SheetClose>
           </SheetContent>
         </Sheet>
+        </div>
       </form>
       {(activeFilters.length || params.get("q")) ? (
         <div className="flex gap-2 overflow-x-auto pb-1">
           {params.get("q") ? (
-            <Badge variant="outline" className="shrink-0 rounded-full bg-white">
+            <button
+              type="button"
+              onClick={clearQuery}
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-stone-200 bg-white px-3 py-1.5 text-xs font-medium text-stone-700 shadow-sm"
+            >
               поиск: {params.get("q")}
-            </Badge>
+              <X className="h-3 w-3" />
+            </button>
           ) : null}
           {activeFilters.map((filter) => (
             <button
