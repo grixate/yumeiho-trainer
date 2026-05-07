@@ -9,6 +9,12 @@ export type SequenceBlock = {
   exercises: SequenceExercise[];
 };
 
+type StoredSequenceBlock = {
+  title: string;
+  description?: string | null;
+  exerciseIds: string[];
+};
+
 const blockDescriptions: Record<string, string> = {
   "Релаксация мышц шеи и плечевого пояса": "Подготовка шеи и плечевого пояса перед коррекцией.",
   "Релаксация шеи": "Снижение защитного напряжения перед точными шейными приемами.",
@@ -50,6 +56,19 @@ export function inferSequenceBlocks(exercises: Exercise[]): SequenceBlock[] {
   return blocks;
 }
 
+export function sequenceBlocks(sequence: PracticeSequence, exercises: Exercise[]): SequenceBlock[] {
+  const stored = readStoredBlocks(sequence.blocks);
+  if (!stored.length) return inferSequenceBlocks(exercises);
+
+  return stored.map((block) => ({
+    title: block.title,
+    description: block.description ?? "Практический блок последовательности.",
+    exercises: block.exerciseIds
+      .map((id) => exercises.find((exercise) => exercise.id === id))
+      .filter((exercise): exercise is Exercise => Boolean(exercise)),
+  })).filter((block) => block.exercises.length);
+}
+
 export function flowPreview(exercises: Exercise[]) {
   return inferSequenceBlocks(exercises).map((block) => block.title);
 }
@@ -63,4 +82,18 @@ export function exerciseWarnings(exercise: Exercise) {
 function fallbackDescription(exercise: Exercise) {
   const zone = exercise.bodyZones[0];
   return zone ? `Практический блок для зоны: ${zone}.` : "Практический блок последовательности.";
+}
+
+function readStoredBlocks(value: unknown): StoredSequenceBlock[] {
+  if (!Array.isArray(value)) return [];
+  const blocks: StoredSequenceBlock[] = [];
+  for (const item of value) {
+    if (!item || typeof item !== "object") continue;
+    const block = item as Record<string, unknown>;
+    const title = typeof block.title === "string" ? block.title : "";
+    const description = typeof block.description === "string" ? block.description : undefined;
+    const exerciseIds = asStringArray(block.exerciseIds);
+    if (title && exerciseIds.length) blocks.push({ title, description, exerciseIds });
+  }
+  return blocks;
 }

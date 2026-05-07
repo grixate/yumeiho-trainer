@@ -1,8 +1,8 @@
 {
   "exercises": [
     {
-      "title": "Reviewed pelvis assessment from book",
-      "slug": "reviewed-pelvis-assessment-from-book",
+      "title": "Проверка положения таза",
+      "slug": "proverka-polozheniya-taza",
       "originalNumber": "Прием № 1",
       "category": "Диагностика",
       "difficulty": "basic",
@@ -28,7 +28,7 @@
       ],
       "expectedEffect": "Появляется исходная точка для выбора дальнейшей работы.",
       "clientFeeling": "Клиент ощущает только мягкую диагностическую позицию.",
-      "sourceReference": "Book, p. 12, Прием № 1"
+      "sourceReference": "Книга, стр. 12, Прием № 1"
     }
   ],
   "theoryCards": [
@@ -40,17 +40,17 @@
       "practicalMeaning": "Перед выбором локальной техники сначала проверь общий баланс тела.",
       "tags": ["таз", "баланс", "центр тяжести"],
       "difficulty": 1,
-      "sourceReference": "Book, p. 5"
+      "sourceReference": "Книга, стр. 5"
     }
   ],
   "practiceSequences": [
     {
-      "slug": "reviewed-book-initial-check",
-      "title": "Reviewed book initial check",
-      "description": "A short reviewed flow for beginning a session.",
-      "useCase": "Initial diagnostic orientation",
+      "slug": "nachalnaya-diagnosticheskaya-orientatsiya",
+      "title": "Начальная диагностическая ориентация",
+      "description": "Короткая проверочная последовательность для начала сеанса.",
+      "useCase": "Ориентация перед выбором приемов",
       "exerciseIds": [],
-      "notes": "After importing real content, fill exerciseIds with reviewed exercise IDs if a stable sequence is needed."
+      "notes": "После проверки содержания заполните exerciseIds нужными приемами для устойчивой последовательности."
     }
   ]
 }

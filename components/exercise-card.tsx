@@ -10,6 +10,9 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
   const keyActions = asStringArray(exercise.keyPoints).length
     ? asStringArray(exercise.keyPoints)
     : asStringArray(exercise.steps);
+  const preview = readPreview(exercise.preview);
+  const goals = preview.goal.length ? preview.goal : exercise.goals;
+  const actions = preview.keyActions.length ? preview.keyActions : keyActions;
 
   return (
     <LearningCard className="space-y-5">
@@ -29,8 +32,8 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
         </Button>
       </div>
       <div className="grid gap-4 text-sm leading-6 text-stone-700 sm:grid-cols-3">
-        <PreviewBlock title="Цель" items={exercise.goals.slice(0, 2)} />
-        <PreviewBlock title="Ключевые действия" items={keyActions.slice(0, 2)} />
+        <PreviewBlock title="Цель" items={goals.slice(0, 2)} />
+        <PreviewBlock title="Ключевые действия" items={actions.slice(0, 2)} />
         <PreviewBlock title="Зоны" items={exercise.bodyZones.slice(0, 3)} />
       </div>
       <div>
@@ -40,6 +43,15 @@ export function ExerciseCard({ exercise }: { exercise: Exercise }) {
       </div>
     </LearningCard>
   );
+}
+
+function readPreview(value: unknown) {
+  if (!value || typeof value !== "object") return { goal: [], keyActions: [] };
+  const preview = value as Record<string, unknown>;
+  return {
+    goal: asStringArray(preview.goal),
+    keyActions: asStringArray(preview.keyActions),
+  };
 }
 
 function PreviewBlock({ title, items }: { title: string; items: string[] }) {

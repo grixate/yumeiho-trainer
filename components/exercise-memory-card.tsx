@@ -19,7 +19,10 @@ export function ExerciseMemoryCard({
   const actions = asStringArray(exercise.keyPoints).length
     ? asStringArray(exercise.keyPoints)
     : asStringArray(exercise.steps);
-  const warnings = exerciseWarnings(exercise);
+  const preview = readPreview(exercise.preview);
+  const goals = preview.goal.length ? preview.goal : exercise.goals;
+  const keyActions = preview.keyActions.length ? preview.keyActions : actions;
+  const warnings = preview.warnings.length ? preview.warnings : exerciseWarnings(exercise);
 
   return (
     <LearningCard className={compact ? "p-4" : undefined}>
@@ -40,8 +43,8 @@ export function ExerciseMemoryCard({
       </div>
 
       <div className="mt-5 grid gap-4 text-sm leading-6 text-stone-700">
-        <MemoryList title="Цель" items={exercise.goals.slice(0, compact ? 2 : 3)} />
-        <MemoryList title="Ключевые действия" items={actions.slice(0, compact ? 2 : 3)} />
+        <MemoryList title="Цель" items={goals.slice(0, compact ? 2 : 3)} />
+        <MemoryList title="Ключевые действия" items={keyActions.slice(0, compact ? 2 : 3)} />
         <MemoryList title="Предупреждения" items={warnings.slice(0, compact ? 1 : 2)} caution />
       </div>
 
@@ -60,6 +63,16 @@ export function ExerciseMemoryCard({
       </Button>
     </LearningCard>
   );
+}
+
+function readPreview(value: unknown) {
+  if (!value || typeof value !== "object") return { goal: [], keyActions: [], warnings: [] };
+  const preview = value as Record<string, unknown>;
+  return {
+    goal: asStringArray(preview.goal),
+    keyActions: asStringArray(preview.keyActions),
+    warnings: asStringArray(preview.warnings),
+  };
 }
 
 export function MemoryList({ title, items, caution }: { title: string; items: string[]; caution?: boolean }) {

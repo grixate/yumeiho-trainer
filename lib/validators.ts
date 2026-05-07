@@ -6,12 +6,19 @@ const jsonStringArray = z.union([stringArray, z.unknown()]).transform((value) =>
   return value.filter((item): item is string => typeof item === "string" && item.trim().length > 0);
 });
 
+const importSequenceBlockSchema = z.object({
+  title: z.string().min(1),
+  description: z.string().optional(),
+  exerciseIds: jsonStringArray.optional().default([]),
+});
+
 export const exerciseSchema = z.object({
   slug: z.string().min(1),
   title: z.string().min(1),
   originalNumber: z.string().optional(),
   category: z.string().min(1),
   difficulty: z.string().default("basic"),
+  sequenceRole: z.string().optional(),
   bodyZones: stringArray.default([]),
   goals: stringArray.default([]),
   clientPosition: z.string().optional(),
@@ -20,8 +27,16 @@ export const exerciseSchema = z.object({
   keyPoints: stringArray.default([]),
   commonMistakes: stringArray.default([]),
   contraindications: stringArray.default([]),
+  relatedExercises: stringArray.default([]),
   expectedEffect: z.string().optional(),
   clientFeeling: z.string().optional(),
+  preview: z
+    .object({
+      goal: stringArray.default([]),
+      keyActions: stringArray.default([]),
+      warnings: stringArray.default([]),
+    })
+    .optional(),
   sourceReference: z.string().optional(),
   personalNotes: z.string().optional(),
 });
@@ -56,6 +71,7 @@ export const importSchema = z.object({
         originalNumber: z.string().optional(),
         category: z.string().min(1),
         difficulty: z.string().optional(),
+        sequenceRole: z.string().optional(),
         bodyZones: jsonStringArray,
         goals: jsonStringArray,
         clientPosition: z.string().optional(),
@@ -64,6 +80,14 @@ export const importSchema = z.object({
         keyPoints: jsonStringArray.optional().default([]),
         commonMistakes: jsonStringArray.optional().default([]),
         contraindications: jsonStringArray.optional().default([]),
+        relatedExercises: jsonStringArray.optional().default([]),
+        preview: z
+          .object({
+            goal: jsonStringArray.optional().default([]),
+            keyActions: jsonStringArray.optional().default([]),
+            warnings: jsonStringArray.optional().default([]),
+          })
+          .optional(),
         expectedEffect: z.string().optional(),
         clientFeeling: z.string().optional(),
         sourceReference: z.string().optional(),
@@ -95,6 +119,7 @@ export const importSchema = z.object({
         title: z.string().min(1),
         description: z.string().optional(),
         useCase: z.string().min(1),
+        blocks: z.array(importSequenceBlockSchema).optional().default([]),
         exerciseIds: jsonStringArray.optional().default([]),
         notes: z.string().optional(),
       }),

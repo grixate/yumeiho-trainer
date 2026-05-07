@@ -21,6 +21,10 @@ export default async function ExerciseDetailPage({ params }: PageProps) {
   const keyActions = asStringArray(exercise.keyPoints).length
     ? asStringArray(exercise.keyPoints)
     : asStringArray(exercise.steps);
+  const preview = readPreview(exercise.preview);
+  const previewGoals = preview.goal.length ? preview.goal : exercise.goals;
+  const previewActions = preview.keyActions.length ? preview.keyActions : keyActions;
+  const previewWarnings = preview.warnings.length ? preview.warnings : exerciseWarnings(exercise);
 
   return (
     <LearningShell>
@@ -56,9 +60,9 @@ export default async function ExerciseDetailPage({ params }: PageProps) {
 
       <LearningCard className="space-y-6">
         <div className="grid gap-5 sm:grid-cols-2">
-          <MemoryList title="Цель" items={exercise.goals.slice(0, 3)} />
-          <MemoryList title="Ключевые действия" items={keyActions.slice(0, 3)} />
-          <MemoryList title="Предупреждения" items={exerciseWarnings(exercise).slice(0, 3)} caution />
+          <MemoryList title="Цель" items={previewGoals.slice(0, 3)} />
+          <MemoryList title="Ключевые действия" items={previewActions.slice(0, 3)} />
+          <MemoryList title="Предупреждения" items={previewWarnings.slice(0, 3)} caution />
           <section className="text-sm leading-6">
             <div className="mb-2 text-xs font-semibold uppercase tracking-[0.14em] text-stone-500">Ожидаемый эффект</div>
             <p className="text-stone-700">{exercise.expectedEffect || "Не указано"}</p>
@@ -124,4 +128,14 @@ function Section({ title, items, caution }: { title: string; items: string[]; ca
         </ul>
     </LearningCard>
   );
+}
+
+function readPreview(value: unknown) {
+  if (!value || typeof value !== "object") return { goal: [], keyActions: [], warnings: [] };
+  const preview = value as Record<string, unknown>;
+  return {
+    goal: asStringArray(preview.goal),
+    keyActions: asStringArray(preview.keyActions),
+    warnings: asStringArray(preview.warnings),
+  };
 }

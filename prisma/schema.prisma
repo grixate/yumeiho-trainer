@@ -30,6 +30,7 @@ model Exercise {
   originalNumber       String?
   category             String
   difficulty           String   @default("basic")
+  sequenceRole         String?
   bodyZones            String[]
   goals                String[]
   clientPosition       String?
@@ -38,6 +39,8 @@ model Exercise {
   keyPoints            Json
   commonMistakes       Json
   contraindications    Json
+  relatedExercises     String[] @default([])
+  preview              Json?
   expectedEffect       String?
   clientFeeling        String?
   theoryLinks          Json?
@@ -68,6 +71,7 @@ model PracticeSequence {
   description String?
   useCase     String
   exerciseIds String[]
+  blocks      Json?
   notes       String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

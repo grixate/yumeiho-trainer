@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { inferSequenceBlocks, orderedSequenceExercises } from "@/lib/sequence-blocks";
+import { orderedSequenceExercises, sequenceBlocks } from "@/lib/sequence-blocks";
 import { Badge } from "@/components/ui/badge";
 import { ExerciseMemoryCard } from "@/components/exercise-memory-card";
 import { EditorialHeader, LearningCard, LearningShell } from "@/components/learning-layout";
@@ -19,7 +19,7 @@ export default async function SequenceDetailPage({ params }: PageProps) {
     where: { id: { in: sequence.exerciseIds } },
   });
   const ordered = orderedSequenceExercises(sequence, exercises);
-  const blocks = inferSequenceBlocks(ordered);
+  const blocks = sequenceBlocks(sequence, ordered);
 
   return (
     <LearningShell>

@@ -51,7 +51,12 @@ export async function importReviewedContent(
   }
 
   const sequenceExerciseRefs = [
-    ...new Set(payload.practiceSequences.flatMap((sequence) => sequence.exerciseIds)),
+    ...new Set(
+      payload.practiceSequences.flatMap((sequence) => [
+        ...sequence.exerciseIds,
+        ...sequence.blocks.flatMap((block) => block.exerciseIds),
+      ]),
+    ),
   ];
   const referencedExercises = sequenceExerciseRefs.length
     ? await prisma.exercise.findMany({
@@ -75,7 +80,16 @@ export async function importReviewedContent(
   const practiceSequences = payload.practiceSequences.map((sequence) => ({
     ...sequence,
     slug: sequence.slug ?? slugify(sequence.title),
-    exerciseIds: sequence.exerciseIds.map((ref) => exerciseRefToId.get(ref) ?? ref),
+    exerciseIds: (sequence.exerciseIds.length
+      ? sequence.exerciseIds
+      : sequence.blocks.flatMap((block) => block.exerciseIds)
+    ).map((ref) => exerciseRefToId.get(ref) ?? ref),
+    blocks: sequence.blocks.length
+      ? sequence.blocks.map((block) => ({
+          ...block,
+          exerciseIds: block.exerciseIds.map((ref) => exerciseRefToId.get(ref) ?? ref),
+        }))
+      : undefined,
   }));
 
   for (const sequence of practiceSequences) {
