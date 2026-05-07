@@ -31,6 +31,8 @@ model Exercise {
   category             String
   difficulty           String   @default("basic")
   sequenceRole         String?
+  intensity            String?
+  requiresPreparation  Boolean  @default(false)
   bodyZones            String[]
   goals                String[]
   clientPosition       String?
@@ -40,6 +42,7 @@ model Exercise {
   commonMistakes       Json
   contraindications    Json
   relatedExercises     String[] @default([])
+  relatedTheory        String[] @default([])
   preview              Json?
   expectedEffect       String?
   clientFeeling        String?

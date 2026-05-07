@@ -19,6 +19,8 @@ export const exerciseSchema = z.object({
   category: z.string().min(1),
   difficulty: z.string().default("basic"),
   sequenceRole: z.string().optional(),
+  intensity: z.string().optional(),
+  requiresPreparation: z.coerce.boolean().optional().default(false),
   bodyZones: stringArray.default([]),
   goals: stringArray.default([]),
   clientPosition: z.string().optional(),
@@ -28,6 +30,7 @@ export const exerciseSchema = z.object({
   commonMistakes: stringArray.default([]),
   contraindications: stringArray.default([]),
   relatedExercises: stringArray.default([]),
+  relatedTheory: stringArray.default([]),
   expectedEffect: z.string().optional(),
   clientFeeling: z.string().optional(),
   preview: z
@@ -72,6 +75,8 @@ export const importSchema = z.object({
         category: z.string().min(1),
         difficulty: z.string().optional(),
         sequenceRole: z.string().optional(),
+        intensity: z.string().optional(),
+        requiresPreparation: z.coerce.boolean().optional().default(false),
         bodyZones: jsonStringArray,
         goals: jsonStringArray,
         clientPosition: z.string().optional(),
@@ -81,6 +86,7 @@ export const importSchema = z.object({
         commonMistakes: jsonStringArray.optional().default([]),
         contraindications: jsonStringArray.optional().default([]),
         relatedExercises: jsonStringArray.optional().default([]),
+        relatedTheory: jsonStringArray.optional().default([]),
         preview: z
           .object({
             goal: jsonStringArray.optional().default([]),
